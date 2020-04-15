@@ -1,9 +1,11 @@
-
 /**
  * twitter的snowflake算法 -- java实现
  * 
  * @author beyond
  * @date 2016/11/26
+ *
+ * @editor AMeng
+ * @update 2020-04-15 10:38:30
  */
 public class SnowFlake {
 
@@ -40,13 +42,26 @@ public class SnowFlake {
 
     public SnowFlake(long datacenterId, long machineId) {
         if (datacenterId > MAX_DATACENTER_NUM || datacenterId < 0) {
-            throw new IllegalArgumentException("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
+            throw new IllegalArgumentException
+            ("datacenterId can't be greater than MAX_DATACENTER_NUM or less than 0");
         }
         if (machineId > MAX_MACHINE_NUM || machineId < 0) {
-            throw new IllegalArgumentException("machineId can't be greater than MAX_MACHINE_NUM or less than 0");
+            throw new IllegalArgumentException
+            ("machineId can't be greater than MAX_MACHINE_NUM or less than 0");
         }
         this.datacenterId = datacenterId;
         this.machineId = machineId;
+    }
+
+    private static SnowFlake instance = null;
+
+    public static SnowFlake getInstance() {
+        if (null == instance) {
+            synchronized (SnowFlake.class) {
+                instance = new SnowFlake(1L, 1L);
+            }
+        }
+        return instance;
     }
 
     /**
@@ -93,7 +108,7 @@ public class SnowFlake {
     }
 
     public static void main(String[] args) {
-        SnowFlake snowFlake = new SnowFlake(2, 3);
+        SnowFlake snowFlake = SnowFlake.getInstance();
 
         for (int i = 0; i < (1 << 12); i++) {
             System.out.println(snowFlake.nextId());
